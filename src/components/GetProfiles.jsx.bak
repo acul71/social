@@ -1,0 +1,32 @@
+import React from 'react'
+import PropTypes from 'prop-types'
+import { getProfiles } from '../get-profiles'
+
+const getItems = async () => {
+  // Get profiles
+  const request = { ownedBy: ["0xfA02A97fDcc14e80E5dB128C17D4132Ca51663D1"], limit: 10 }
+  /*
+  getProfiles(request).then(val => {
+    return val
+  }, reason => {
+    return reason
+  }
+  )
+  */
+  return await getProfiles(request)
+
+}
+
+
+export const GetProfiles = (props) => {
+  const profiles = getItems()
+  console.log('[GetProfiles.jsx] profiles=', profiles)
+  console.log('[GetProfiles.jsx] profiles[0]=', profiles.data.profiles.items[0])
+  return (
+    <div>GetProfiles</div>
+  )
+}
+
+GetProfiles.propTypes = {}
+
+
