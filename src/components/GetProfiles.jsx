@@ -1,4 +1,5 @@
 import React from 'react'
+import { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Box, Text, HStack, Button, Heading } from '@chakra-ui/react';
 
@@ -102,14 +103,14 @@ export const getProfiles = (request) => {
 
 
 const ProfileBox = (props) => {
-  
+  const buttonColor = props.id === localStorage.getItem('ProfileId') ? 'green' : 'gray'
   const bio = props.bio == null ? '' : props.bio.length < 20 ? props.bio : props.bio.substring(0,17) + '...'
   return (
     <Box mt="2" maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden'>
       <HStack p="1">
         <Box fontWeight='semibold'>ID: </Box><Box>{props.id}</Box>&ensp;
         <Box fontWeight='semibold'>Name:</Box> <Box>{props.name}</Box>
-        <Button>Sel</Button>
+        <Button colorScheme={buttonColor} onClick={ () => {localStorage.setItem('ProfileId', props.id); props.setCurrentProfileId(props.id)}}>Set</Button>
       </HStack>
       <HStack p="1"><Box fontWeight='semibold'>Bio: </Box><Box>{bio}</Box></HStack>
     </Box>
@@ -120,6 +121,8 @@ const ProfileBox = (props) => {
 
 
 export const GetProfiles = (props) => {
+  const [currendProfileId, setCurrentProfileId] = useState(localStorage.getItem('ProfileId'))
+
   const request = { ownedBy: [props.signerAddress], limit: 10 }
   const { loading, error, data } = useQuery(GET_PROFILES, {variables: { request },  client: apolloClient })
   if (loading) return 'Loading...';
@@ -143,8 +146,9 @@ export const GetProfiles = (props) => {
                 id={val.id}
                 name={val.name}
                 bio={val.bio}
+                currendProfileId={currendProfileId}
+                setCurrentProfileId={setCurrentProfileId}
               />
-            
           )
         }
       </Box>
